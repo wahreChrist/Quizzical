@@ -2,15 +2,37 @@ import React, { useState, useEffect } from "react";
 import QuizCard from "./QuizCard";
 import { nanoid } from "nanoid";
 
-export default function Quiz() {
-    const [quizes, setQuizes] = useState([]);
-    const [amountOfAnswers, setAmountOfAnswers] = useState(0);
-    const [resultsShown, setResultsShown] = useState(false);
-    // console.log('quizes state:', quizes)
+interface Quiz {
+    id: string;
+    correctAnswer: string;
+    question: string;
+    answers: Answer[];
+}
 
-    function shuffle(array) {
+interface Answer {
+    ansId: string;
+    isHeld: boolean;
+    text: string;
+}
+
+interface APIresponse {
+    category: string;
+    correct_answer: string;
+    difficulty: string;
+    incorrect_answers: string[];
+    question: string;
+    type: string;
+}
+
+export default function Quiz() {
+    const [quizes, setQuizes] = useState<Quiz[]>([]);
+    const [amountOfAnswers, setAmountOfAnswers] = useState<number>(0);
+    const [resultsShown, setResultsShown] = useState<boolean>(false);
+    // console.log("quizes state:", quizes);
+
+    function shuffle(array: string[]): string[] {
         let currentIndex = array.length,
-            randomIndex;
+            randomIndex: number;
 
         while (currentIndex != 0) {
             randomIndex = Math.floor(Math.random() * currentIndex);
@@ -25,7 +47,7 @@ export default function Quiz() {
         return array;
     }
 
-    function answersArr(data) {
+    function answersArr(data: string[]): Answer[] {
         return data.map((answer) => {
             return {
                 text: answer,
@@ -35,8 +57,8 @@ export default function Quiz() {
         });
     }
 
-    function intializeQuizes(data) {
-        let quizSet = data.map((quizlet) => {
+    function intializeQuizes(data: APIresponse[]) {
+        let quizSet = data.map((quizlet: APIresponse) => {
             return {
                 id: nanoid(),
                 question: quizlet.question,
@@ -61,7 +83,7 @@ export default function Quiz() {
             });
     }, []);
 
-    const newGame = () => {
+    const newGame = (): void => {
         fetch("https://opentdb.com/api.php?amount=5&type=multiple")
             .then((res) => res.json())
             .then((data) => setQuizes(intializeQuizes(data.results)))
@@ -71,7 +93,7 @@ export default function Quiz() {
         setResultsShown(false);
     };
 
-    function choiceToggle(answerId, questId) {
+    function choiceToggle(answerId: string, questId: string): void {
         setQuizes((quiz) =>
             quiz.map((question) => {
                 if (question.id === questId) {
@@ -90,7 +112,7 @@ export default function Quiz() {
         );
     }
 
-    const answersCheck = () => {
+    const answersCheck = (): void => {
         let chosenAnswers = quizes.map((question) =>
             question.answers.filter((ans) => ans.isHeld == true)
         );

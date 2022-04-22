@@ -1,8 +1,16 @@
 import React from "react";
 
-export default function Answer(props) {
-    // console.log("answer props:", props);
-    let display = {};
+interface AnswProp {
+    key: number;
+    text: string;
+    isHeld: boolean;
+    correctAnswer: string;
+    resultsShown: boolean;
+    selector: () => void;
+}
+
+export default function Answer(props: AnswProp) {
+    let display: React.CSSProperties = {};
 
     if (!props.resultsShown) {
         display = {

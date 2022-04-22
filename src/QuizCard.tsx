@@ -1,8 +1,23 @@
 import React from "react";
 import Answer from "./Answer";
 
-export default function QuizCard(props) {
-    // console.log("question:", props);
+interface Answ {
+    ansId: string;
+    isHeld: boolean;
+    text: string;
+}
+
+interface CardProp {
+    key: string;
+    id: string;
+    question: string;
+    correct: string;
+    resultsShown: boolean;
+    answers: Answ[];
+    selector: (ansId: string, questId: string) => void;
+}
+
+export default function QuizCard(props: CardProp) {
     let question = props.question
         .replace(/&quot;/g, '"')
         .replace(/&#039;/g, "'");

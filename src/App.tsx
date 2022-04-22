@@ -3,7 +3,7 @@ import TitleCard from "./TitleCards";
 import Quiz from "./Quiz";
 
 export default function App() {
-    const [menu, setMenu] = useState(false);
+    const [menu, setMenu] = useState<boolean>(false);
 
     function toggleMenu() {
         setMenu((state) => !state);
